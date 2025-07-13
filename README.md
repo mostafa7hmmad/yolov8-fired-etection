@@ -1,4 +1,4 @@
-# mostafa7hmmad-yolov8-fired-etection
+
 # 🔥 Fire and Smoke Detection with YOLOv8
 
 Fire and smoke detection is critical for early warning systems in wildfire monitoring and safety applications. This project implements a deep learning solution using the *YOLOv8s* model from Ultralytics for accurate and real-time detection of fire and smoke in images. The model is trained on a *custom dataset* and evaluated using various performance metrics to ensure real-world applicability.
