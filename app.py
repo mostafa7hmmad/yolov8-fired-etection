@@ -1,14 +1,22 @@
 # app.py
+import os
 import streamlit as st
 import cv2
 import numpy as np
 from ultralytics import YOLO
 import pygame
+import gdown
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, WebRtcMode
 
 # Constants
 MODEL_PATH = "best.pt"
 BUZZER_SOUND_PATH = "1.mp3"
+DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1N7PmIx1hHBlXtYNvi0u2dYK18n5wWtPA"
+
+# Download model if not present
+if not os.path.exists(MODEL_PATH):
+    st.info("Downloading YOLO model from Google Drive...")
+    gdown.download_folder(DRIVE_FOLDER_URL, output="./", quiet=False, use_cookies=False)
 
 # RTC configuration for WebRTC
 RTC_CONFIGURATION = RTCConfiguration(
@@ -17,7 +25,6 @@ RTC_CONFIGURATION = RTCConfiguration(
 
 class VideoTransformer(VideoTransformerBase):
     def __init__(self):
-        # Load model and initialize buzzer
         self.model = YOLO(MODEL_PATH)
         pygame.mixer.init()
         self.buzzer = pygame.mixer.Sound(BUZZER_SOUND_PATH)
@@ -35,7 +42,6 @@ class VideoTransformer(VideoTransformerBase):
                     cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
                     cv2.putText(img, "FIRE", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
         if fire_detected:
-            # Play buzzer once per frame with detection
             self.buzzer.play()
         return img
 
@@ -78,10 +84,3 @@ else:
         media_stream_constraints={"video": True, "audio": False},
     )
 
-# requirements.txt
-# ----------------
-# streamlit
-# opencv-python
-# pygame
-# ultralytics
-# streamlit-webrtc
